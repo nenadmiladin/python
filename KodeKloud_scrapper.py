@@ -21,10 +21,11 @@ def dataframe(rows):
         series = pd.Series(table_data, index=df.columns)
         df = df.append(series, ignore_index=True)
     df.loc[df.Status == "Failed\nView Details", "Status"] = "Failed"
-    
+    df.loc[df.Status == "Go", "Status"] = "Pending"
 
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless') # HEADLESS BROWSER
+chrome_options.add_argument("--log-level=3") # DON'T SHOW LOGS IN CLI
 chrome_driver_binary = r"C:\Users\User\Downloads\chromedriver_win32\chromedriver.exe"
 driver = webdriver.Chrome(executable_path=chrome_driver_binary, options=chrome_options)
 
@@ -67,27 +68,45 @@ sleep(4)
 # task_number.text.split(' of ')[1].split(' entries ')[0]
 
 # SECOND PAGE
-
 row_number()
 dataframe(rows)
 print(driver.title)
 driver.quit()
 
-print(df.to_string())
+# JOIN BASIC AND BONUS EXPERIENCE
+for i in range(len(df)):
+    if len(df.loc[i, 'Experience'].split(' ')) > 1:
+        df.loc[i, 'Experience' ] = int(df.loc[i, 'Experience' ].split(" ")[0]) + int(df.loc[i, 'Experience' ].split(" ")[1])  
+    else:
+        pass
+
+print(df.to_string(), '\n')
+# ---------------- Third Part of the Script ------------------------------------------------------------------
 # df.loc[ 0 , 'Experience' ]
 # print(len(df.columns))
 # print(df.loc[df['A'] == 'foo'])
 # df['Position'].str.contains("PG") 
 # df['Status'].str.count("Failed").sum()
 # df['Status'].str.count("Success").sum()
-# VISUALIZATION 1
+# VISUALIZATION 2
 # GIT
 # ANSIBLE
 # PUPPET
 # DOCKER
 # browser.save_screenshot('C:\\Users\\grayson\\Downloads\\headless_chrome_test.png')
-# VISUALIZATION 2
-# 
-#
-#
-#
+
+# SHOW DevOps TOOLS TASKS
+for i in ['Ansible' , 'Docker', 'Puppet', 'Git']:
+    print(i, df["Name"].str.count(i).sum(), '\n', df[df["Name"].str.contains(i)], '\n')
+
+
+# CREATE PIE CHART 
+labels = "Completed", "Failed", "Pending"
+sizes = [df['Status'].str.count("Success").sum(), df['Status'].str.count("Failed").sum(), df['Status'].str.count("Pending").sum()]
+colors = ['green', 'red', 'lightskyblue']
+explode = (0, 0.15, 0)
+plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=30)
+plt.axis('equal')
+plt.title('Kode Kloud Enginer Tasks Statistics') 
+plt.show()
+
