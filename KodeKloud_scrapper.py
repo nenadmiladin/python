@@ -1,7 +1,7 @@
-import pandas as pd
-from time import sleep
 from selenium import webdriver
+import pandas as pd
 import matplotlib.pyplot as plt
+from time import sleep
 
 def row_number():
     # Counts the number of rows in the table
@@ -23,12 +23,15 @@ def dataframe(rows):
     df.loc[df.Status == "Failed\nView Details", "Status"] = "Failed"
     
 
-driver = webdriver.Chrome(r"C:\Users\User\Downloads\chromedriver_win32\chromedriver.exe")
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless')
+chrome_driver_binary = r"C:\Users\User\Downloads\chromedriver_win32\chromedriver.exe"
+driver = webdriver.Chrome(executable_path=chrome_driver_binary, options=chrome_options)
+
 driver.get('https://www.kodekloud-engineer.com')
-sleep(2)
+driver.implicitly_wait(30)
 
 username = driver.find_element_by_id("inputEmail").send_keys("nenadmiladin@yahoo.com")
-
 password = driver.find_element_by_id("inputPassword").send_keys("kodekloud4life")
 
 sign_in_button = driver.find_element_by_xpath("/html/body/div[2]/div[3]/div/div/div/form[1]/button[1]").click()
@@ -67,19 +70,24 @@ sleep(4)
 
 row_number()
 dataframe(rows)
+print(driver.title)
+driver.quit()
 
 print(df.to_string())
-#df.loc[ 0 , 'Experience' ]
-
+# df.loc[ 0 , 'Experience' ]
+# print(len(df.columns))
+# print(df.loc[df['A'] == 'foo'])
+# df['Position'].str.contains("PG") 
+# df['Status'].str.count("Failed").sum()
+# df['Status'].str.count("Success").sum()
 # VISUALIZATION 1
 # GIT
 # ANSIBLE
 # PUPPET
 # DOCKER
-
+# browser.save_screenshot('C:\\Users\\grayson\\Downloads\\headless_chrome_test.png')
 # VISUALIZATION 2
 # 
 #
 #
 #
-
