@@ -32,8 +32,8 @@ driver = webdriver.Chrome(executable_path=chrome_driver_binary, options=chrome_o
 driver.get('https://www.kodekloud-engineer.com')
 driver.implicitly_wait(30)
 
-username = driver.find_element_by_id("inputEmail").send_keys("nenadmiladin@yahoo.com")
-password = driver.find_element_by_id("inputPassword").send_keys("kodekloud4life")
+username = driver.find_element_by_id("inputEmail").send_keys("username")         # input username
+password = driver.find_element_by_id("inputPassword").send_keys("password")      # input password
 
 sign_in_button = driver.find_element_by_xpath("/html/body/div[2]/div[3]/div/div/div/form[1]/button[1]").click()
 sleep(2)
